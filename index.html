@@ -749,16 +749,21 @@
       return arr;
     }
 
-    function showMonster(index) {
-      const monster = monsters[index];
-      monsterNameEl.textContent = monster.name;
-      monsterProgressEl.textContent = `Kontrakt ${index + 1} z ${monsters.length}`;
-      monsterIntroEl.textContent = monster.intro;
-      if (monster.image) {
-  monsterImageEl.innerHTML = `
-    <img src="${monster.image}" alt="${monster.imageAlt || monster.name}">
-    <div class="caption">${monster.imageIdea || ""}</div>
-  `;
+   function showMonster(index) {
+  const monster = monsters[index];
+  monsterNameEl.textContent = monster.name;
+  monsterProgressEl.textContent = `Kontrakt ${index + 1} z ${monsters.length}`;
+  monsterIntroEl.textContent = monster.intro;
+
+  // >>> TADY NOVÝ KÓD PRO OBRÁZEK <<<
+  if (monster.image) {
+    monsterImageEl.innerHTML = `
+      <img src="${monster.image}" alt="${monster.imageAlt || monster.name}">
+      <div class="caption">${monster.imageIdea || ""}</div>
+    `;
+  } else {
+    monsterImageEl.innerHTML = `<span>Tip na obrázek:</span>${monster.imageIdea || ""}`;
+  }
 } else {
   monsterImageEl.innerHTML = `<span>Tip na obrázek:</span>${monster.imageIdea || ""}`;
 }
@@ -902,4 +907,5 @@
   </script>
 </body>
 </html>
+
 
