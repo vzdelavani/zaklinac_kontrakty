@@ -50,6 +50,18 @@
       border: 1px solid rgba(148,163,184,0.3);
       box-shadow: 0 18px 40px rgba(15,23,42,0.7);
     }
+    
+.monster-image img {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.monster-image .caption {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
 
     header h1 {
       margin: 0 0 4px;
@@ -377,6 +389,7 @@
         name: "Ghúl na hřbitově",
         intro: "Vesnice si stěžuje, že jim někdo rozhrabává hroby a hoduje na mrtvých. V noci je slyšet škrábání a chrochtání od hřbitova. Lidé mluví o ghúlech a nekrofázích.\n\nJak se připravíš na lov?",
         imageIdea: "Detail hřbitova v noci: rozhrabaný hrob, vychrtlý ghúl s prodlouženými pažemi vylézá z jámy, za ním měsíc v mlze.",
+        image: "img/ghul.png",
         options: [
           {
             text: "Namažeš stříbrný meč olejem proti nekrofágům a vylákáš ghúla k bráně, kde máš prostor.",
@@ -408,6 +421,7 @@
       {
         name: "Utopenci v přístavu",
         intro: "V noci mizí lodníci, z vody se ozývá odporné chechtání a šplouchání. Všichni mluví o utopencích, kteří stahují lidi pod hladinu.\n\nJak budeš postupovat?",
+        image: "img/utopenci.png",
         imageIdea: "Mlhavý přístav, z temné vody se vynořují bledé paže a zkroucené siluety utopenců u mola, jedna lucerna osvětluje scénu.",
         options: [
           {
@@ -440,6 +454,7 @@
       {
         name: "Striga ve starém paláci",
         intro: "V ruinách starého sídla se každou noc ozývá řev a škrábání do zdi. Vypráví se, že někdo kdysi proklel nenarozené dítě šlechtice. Teď se z něj stala striga.\n\nCo uděláš?",
+        image: "img/striga.png",
         imageIdea: "Rozpadlý palác v měsíčním světle, na střeše nebo u portálu se hrbí striga – znetvořená ženská silueta s rudou hřívou a dlouhými drápy.",
         options: [
           {
@@ -472,6 +487,7 @@
       {
         name: "Lesní duch v hlubokém hvozdu",
         intro: "Lovci se nevracejí z lesa. Mezi stromy se prý pohybuje něco, co není ani člověk, ani zvíře. Většina obětí je nalezena roztrhaná, když vůbec.\n\nJak se postavíš lesnímu duchovi?",
+        image: "img/lesij.png",
         imageIdea: "Temný hluboký les, mezi stromy se rýsuje velká stinná silueta s parožím nebo větvemi místo hlavy, oči září nazelenalo.",
         options: [
           {
@@ -504,6 +520,7 @@
       {
         name: "Vyšší upír v městském podsvětí",
         intro: "V přístavním městě mizí lidé beze stopy. Nikdo neslyšel křik, žádná krev. Jen ticho. Všechno ukazuje na vyššího upíra.\n\nJak k němu přistoupíš?",
+        image: "img/upir.png",
         imageIdea: "Temná ulička přístavního města, na střeše nebo u lampy stojí elegantní postava v dlouhém kabátě, bledý obličej, lehce špičaté uši.",
         options: [
           {
@@ -536,6 +553,7 @@
       {
         name: "Kikimora na bažinách",
         intro: "Na okraji bažiny mizí poutníci. V rákosí jsou vidět stopy mnoha nohou a slizké zbytky pavučin. Někde v bahně číhá velká kikimora.\n\nJak ji ulovíš?",
+        image: "img/kikimora.png",
         imageIdea: "Bažina se suchým ostrůvkem uprostřed, z rákosí vylézá hmyzoidní kikimora s mnoha nohami a chitinem, v dálce je silueta zaklínače.",
         options: [
           {
@@ -568,6 +586,7 @@
       {
         name: "Polednice na polích",
         intro: "Na polích se v poledne zjevuje bledá postava v roztrhané zástěře. Dohání žence k šílenství a smrti. Lidé se bojí jít sklízet obilí.\n\nCo uděláš s polednicí?",
+        image: "img/polednice.png",
         imageIdea: "Rozpálené pole s pšenicí, uprostřed stojí bledá ženská postava v potrhané zástěře, vzduch se tetelí horkem.",
         options: [
           {
@@ -600,6 +619,7 @@
       {
         name: "Nekkeři v rokli",
         intro: "Karavana zmizela v úzké rokli. Na svazích jsou malé stopy a zbytky kostí. Nekkeři mají roklinu očividně rádi.\n\nJak je vyčistíš?",
+        image: "img/nekker.png",
         imageIdea: "Úzká rokle s kamenitými srázy, mezi balvany se plíží malí goblinoidní nekkeři, výše stojí zaklínač připravený u ústí rokle.",
         options: [
           {
@@ -632,6 +652,7 @@
       {
         name: "Bruxa v opuštěném domě",
         intro: "V okrajové čtvrti města straší cosi neviditelného. Slyšet je jen šepot, smích a pak výkřik. V domě se dlouho nikdo neodvážil spát.\n\nJak si poradíš s bruxou?",
+        image: "img/bruxa.png",
         imageIdea: "Starý dům v noci, otevřené dveře do tmy, uvnitř jen náznak průsvitné ženské postavy se špičatými zuby.",
         options: [
           {
@@ -664,6 +685,7 @@
       {
         name: "Golem ve staré svatyni",
         intro: "Ve staré svatyni dávných mágů se probudil kamenný strážce. Ničí vše, co se přiblíží. Kamenné kroky duní až do vesnice.\n\nJak golemův problém vyřešíš?",
+        image: "img/golem.png",
         imageIdea: "Kamenný golem stojí uprostřed kruhu ruin, na těle vyryté runy, v pozadí rozbitý oltář a magické pečetě.",
         options: [
           {
@@ -732,7 +754,14 @@
       monsterNameEl.textContent = monster.name;
       monsterProgressEl.textContent = `Kontrakt ${index + 1} z ${monsters.length}`;
       monsterIntroEl.textContent = monster.intro;
-      monsterImageEl.innerHTML = `<span>Tip na obrázek:</span>${monster.imageIdea}`;
+      if (monster.image) {
+  monsterImageEl.innerHTML = `
+    <img src="${monster.image}" alt="${monster.imageAlt || monster.name}">
+    <div class="caption">${monster.imageIdea || ""}</div>
+  `;
+} else {
+  monsterImageEl.innerHTML = `<span>Tip na obrázek:</span>${monster.imageIdea || ""}`;
+}
       feedbackEl.classList.add("hidden");
       feedbackEl.textContent = "";
       nextButton.classList.add("hidden");
@@ -873,3 +902,4 @@
   </script>
 </body>
 </html>
+
