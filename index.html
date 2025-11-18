@@ -794,41 +794,55 @@
   }
 
   function handleAnswerClick(button) {
-    const alreadyDone = Array.from(optionsContainer.querySelectorAll(".option-btn"))
-      .some(b => b.classList.contains("disabled"));
-    if (alreadyDone) return;
+  const alreadyDone = Array.from(optionsContainer.querySelectorAll(".option-btn"))
+    .some(b => b.classList.contains("disabled"));
+  if (alreadyDone) return;
 
-    const points = parseInt(button.dataset.points, 10);
-    const comment = button.dataset.comment;
+  const points = parseInt(button.dataset.points, 10);
+  const comment = button.dataset.comment;
 
-    totalScore += points;
+  // přičteme body (i ty záporné)
+  totalScore += points;
 
-    const btns = optionsContainer.querySelectorAll(".option-btn");
-    btns.forEach(b => {
-      b.classList.add("disabled");
-    });
+  // zablokujeme všechna tlačítka
+  const btns = optionsContainer.querySelectorAll(".option-btn");
+  btns.forEach(b => {
+    b.classList.add("disabled");
+  });
 
-    if (points > 0) {
-      button.classList.add("correct");
-    } else if (points < 0) {
-      button.classList.add("bad");
-    }
+  // vizuální označení odpovědi
+  if (points > 0) {
+    button.classList.add("correct");
+  } else if (points < 0) {
+    button.classList.add("bad");
+  }
 
-    let ptsText = "";
-    if (points > 0) {
-      ptsText = `Získáváš ${points} bod(ů).`;
-    } else if (points === 0) {
-      ptsText = "Nezískáváš žádné body.";
-    } else {
-      ptsText = `Přicházíš o ${Math.abs(points)} bod(ů).`;
-    }
+  // text k bodům
+  let ptsText = "";
+  if (points > 0) {
+    ptsText = `Získáváš ${points} bod(ů).`;
+  } else if (points === 0) {
+    ptsText = "Nezískáváš žádné body.";
+  } else {
+    ptsText = `Přicházíš o ${Math.abs(points)} bod(ů).`;
+  }
 
-    feedbackEl.innerHTML = `<strong>Výsledek:</strong> ${comment}<br><br>${ptsText}`;
-    feedbackEl.classList.remove("hidden");
-    currentScoreEl.innerHTML = `Průběžné skóre: <span class="score-pill">${totalScore} bodů</span>`;
+  feedbackEl.innerHTML = `<strong>Výsledek:</strong> ${comment}<br><br>${ptsText}`;
+  feedbackEl.classList.remove("hidden");
+  currentScoreEl.innerHTML = `Průběžné skóre: <span class="score-pill">${totalScore} bodů</span>`;
 
+  // NOVINKA: pokud tě příšera zabije (points < 0), hra končí hned
+  if (points < 0) {
+    // malá pauza, aby hráč stihl přečíst komentář
+    setTimeout(() => {
+      showEndScreen(true);  // předáme info, že šlo o smrt
+    }, 700);
+  } else {
+    // jinak normálně zobrazíme tlačítko "Další kontrakt"
     nextButton.classList.remove("hidden");
   }
+}
+
 
   function evaluateFinalScore(score) {
     if (score >= 22) {
@@ -859,45 +873,30 @@
     }
   }
 
-  function showEndScreen() {
-    gameScreen.classList.add("hidden");
-    endScreen.classList.remove("hidden");
+  function showEndScreen(died = false) {
+  gameScreen.classList.add("hidden");
+  endScreen.classList.remove("hidden");
 
-    const evalResult = evaluateFinalScore(totalScore);
+  if (died) {
+    // speciální text pro smrt v boji
     finalScoreEl.textContent = `Celkové skóre: ${totalScore} bod(ů)`;
-    finalTitleEl.textContent = evalResult.title;
-    finalDescEl.textContent = evalResult.desc;
+    finalTitleEl.textContent = "Padlý zaklínač / zaklínačka";
+    finalDescEl.textContent =
+      "Jedna špatná volba stačila. Příště možná zvolíš opatrnější nebo chytřejší postup – tady by o tobě v krčmě vyprávěli spíš jako o varování než o legendě.";
+    return; // tabulku hodnocení necháme dole stejnou
   }
 
-  startButton.addEventListener("click", () => {
-    totalScore = 0;
-    currentIndex = 0;
-    startScreen.classList.add("hidden");
-    endScreen.classList.add("hidden");
-    gameScreen.classList.remove("hidden");
-    showMonster(currentIndex);
-  });
-
-  nextButton.addEventListener("click", () => {
-    currentIndex++;
-    if (currentIndex >= monsters.length) {
-      showEndScreen();
-    } else {
-      showMonster(currentIndex);
-    }
-  });
-
-  restartButton.addEventListener("click", () => {
-    totalScore = 0;
-    currentIndex = 0;
-    endScreen.classList.add("hidden");
-    gameScreen.classList.remove("hidden");
-    showMonster(currentIndex);
+  // původní vyhodnocení pro dohranou hru
+  const evalResult = evaluateFinalScore(totalScore);
+  finalScoreEl.textContent = `Celkové skóre: ${totalScore} bod(ů)`;
+  finalTitleEl.textContent = evalResult.title;
+  finalDescEl.textContent = evalResult.desc;
   });
 </script>
 
 </body>
 </html>
+
 
 
 
