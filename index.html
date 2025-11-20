@@ -2,6 +2,7 @@
 <html lang="cs">
 <head>
   <meta charset="UTF-8">
+    * {
   <title>Zaklínačské kontrakty – knihovní gamebook</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
@@ -18,7 +19,6 @@
       --border: #1f2933;
     }
 
-    * {
       box-sizing: border-box;
     }
 
@@ -372,7 +372,7 @@
     const monsters = [
       {
         name: "Ghúl na hřbitově",
-        intro:`Na hřbitově za vsí už třetí noc po sobě někdo rozhrabal čerstvé hroby. Z mokré hlíny trčí kříže nakřivo, věnce jsou rozšlapané a po kamenech stékají šmouhy bahna smíchaného s něčím, co bych raději moc nezkoumal. Hrobník tě přivítá se svítilnou v ruce a třesoucím se hlasem: „Já to slyšel, mistře. Chrochtání, mlaskání… a pak ticho. A když jsem vyběhl ven, viděl jsem jen tyhle stopy.“ Ukáže ti do rozrytého bláta – do hloubky zaříznuté drápy a šouravé škrábance.
+        intro:`Na hřbitově za vsí už třetí noc po sobě někdo rozhrabal čerstvé hroby. Z mokré hlíny trčí kříže nakřivo, věnce jsou rozšlapané a po kamenech stékají šmouhy bahna smíchaného s něčím, co je lepší raději moc nezkoumat. Hrobník tě přivítá se svítilnou v ruce a třesoucím se hlasem: „Já to slyšel, mistře. Chrochtání, mlaskání… a pak ticho. A když jsem vyběhl ven, viděl jsem jen tyhle stopy.“ Ukáže ti do rozrytého bláta – na rýhy od drápů a škrábance.
 
 Vesničané se shlukují u hřbitovní brány a drží si talismany u krku, jako by to byla skutečná ochrana. „Mrtví nemají klid,“ šeptá stařena v tlumeném kruhu světla. „Někdo nám tu žere příbuzné…“ Vzduch je těžký, noční mlha leží mezi náhrobky a ty víš, že někde tam venku, mezi kříži, už něco čeká. Jak se připravíš na lov ghúla?`,
         image: "img/ghul.png",
@@ -407,9 +407,9 @@ Vesničané se shlukují u hřbitovní brány a drží si talismany u krku, jako
       },
       {
         name: "Utopenci v přístavu",
-        intro: `Přístav je na noc podezřele tichý. Nikdo tu nezpívá opilé písničky, lampy se rychle zhasínají a okenice se zavírají, jakmile se přiblížíš k molu. Voda se jen lehce vzdouvá, ale na mokrých prknech vidíš slizké otisky rukou a stop, které nikdo nechce moc zkoumat. Lodník s ošoupanou čepicí se k tobě nakloní tak blízko, až cítíš pivo a strach: „Nejhorší je, že nic neslyšíš,“ šeptá. „Jen šplouchání… a pak se člověk prostě nevrátí.“
+        intro: `Přístav je v noci podezřele tichý. Nikdo tu nezpívá opilecké písničky, lampy se rychle zhasínají a okenice se zavírají, jakmile se přiblížíš k molu. Voda se jen lehce vzdouvá, ale na mokrých prknech vidíš slizké otisky rukou a podivných stop. Lodník s ošoupanou čepicí se k tobě nakloní tak blízko, až cítíš pivo a strach: „Nejhorší je, že nic neslyšíš,“ šeptá. „Jen šplouchání… a pak se člověk prostě nevrátí.“
 
-Na konci mola visí roztržené lano a ve tmě pod tebou cosi tiše zabublá. Jiný námořník se přidá, oči vytřeštěné: „Stáhli mi parťáka pod hladinu, ani nestihl zařvat. Voda byla klidná, jako když to hrob přiklopí.“ Vlny se pomalu tříští o piloty a pak – koutkem oka – zahlédneš něco bledého, co se hned zase stáhne do hlubin. Utopenci mají zjevně nové loviště. Jak budeš postupovat proti tvorům z vody?`,
+Na konci mola visí roztržené lano a ve tmě pod tebou cosi tiše zabublá. Jiný muž se přidá, oči vytřeštěné: „kamaráda stáhli pod hladinu, ani nestihl zařvat. Voda byla klidná, jako když to hrob přiklopí.“ Vlny se pomalu tříští o piloty a pak – koutkem oka – zahlédneš něco bledého, co se hned zase stáhne do hlubin. Utopenci mají zjevně nové loviště. Jak budeš postupovat proti tvorům z vody?`,
 
         image: "img/utopenci.png",
         imageAlt: "Utopenci v přístavu",
@@ -443,7 +443,7 @@ Na konci mola visí roztržené lano a ve tmě pod tebou cosi tiše zabublá. Ji
       },
       {
         name: "Striga ve starém paláci",
-        intro: `Ruiny starého paláce trčí nad vesnicí jako shnilý zub trčící z dásně. V noci z něj doléhá zvuk škrábání, lomcování dveřmi a řev, který není ani lidský, ani zvířecí. Vesničané se po setmění neodvažují ani po cestě, která vede pod zámkem – raději kvůli tomu obcházejí celé údolí. V zakouřené krčmě ti stařena nalévá pálenku a přitom si tě měří zpod hustého obočí: „Prokleli jeho dítě, chápeš?“ mručí. „Ještě v břiše. A teď… teď to chodí po chodbách.“
+        intro: `Ruiny starého paláce se tyčí nad vesnicí jako shnilý zub trčící z dásně. V noci z něj doléhá zvuk škrábání, lomcování dveřmi a řev, který není ani lidský, ani zvířecí. Vesničané se po setmění neodvažují chodit po cestě, která vede pod zámkem – raději kvůli tomu obcházejí celé údolí. V zakouřené krčmě ti stařena nalévá pálenku a přitom si tě měří zpod hustého obočí: „Prokleli jeho dítě, chápeš?“ mručí. „Ještě v břiše. A teď… teď to chodí po chodbách paláce.“
 
 Když se k paláci přiblížíš, vítr skrze rozbitá okna nese pach zatuchliny a něčeho starého, čpavého. Na zdi u brány jsou hluboké rýhy po drápech – jako by se někdo snažil dostat ven, ne dovnitř. Slyšíš tiché zavrčení následované tlumeným, dutým úderem, jako když cosi s velkou silou narazí do kamene. Kletba stále drží a monstrum uvnitř má dnes zase hlad. Co uděláš se strigou, která straší ve starém paláci?`,
         image: "img/striga.png",
@@ -478,7 +478,7 @@ Když se k paláci přiblížíš, vítr skrze rozbitá okna nese pach zatuchlin
       },
       {
         name: "Lesní duch v hlubokém hvozdu",
-        intro: `Hvozd za vsí je příliš tichý. Žádné ptáky, žádné praskání větví pod zvěří – jen vítr, který se proplétá korunou stromů a občas s sebou přinese šepot, který si raději nezkoumáš. Lovec, který tě vede, tě zastaví gestem ruky: „Tady,“ ukáže na kmen hustého smrku. Do kůry jsou vyřezané zvláštní znaky – směs starých run a něčeho prastarého, co nevypadá lidsky. Pod stromem leží roztrhaná košile a kost, ohlodaně čistá.
+        intro: `Hvozd za vsí je příliš tichý. Žádní ptáci, žádné praskání větví pod zvěří – jen vítr, který se proplétá korunou stromů a občas s sebou přinese šepot, který si raději nezkoumáš. Lovec, který tě vede, tě zastaví gestem ruky: „Tady,“ ukáže na kmen hustého smrku. Do kůry jsou vyřezané zvláštní znaky – směs starých run a něčeho prastarého, co nevypadá lidsky. Pod stromem leží roztrhaná košile a kost, ohlodaně čistá.
 
 „Tohle neudělali vlci,“ říká lovec tiše a ohlíží se přes rameno. „Je to, jako by si někdo v lese značil… trofeje.“ Čím hlouběji jdeš, tím víc máš pocit, že tě něco sleduje mezi stromy. Tu a tam zahlédneš pohyb – příliš vysoký, příliš tichý na obyčejné zvíře. Ten les něco vlastní a to něco zjevně nesouhlasí s tím, že po jeho zemi chodí lidé. Jak se postavíš lesnímu duchovi, který brání svůj hvozd?`,
 
@@ -514,7 +514,7 @@ Když se k paláci přiblížíš, vítr skrze rozbitá okna nese pach zatuchlin
       },
       {
         name: "Vyšší upír v městském podsvětí",
-       intro: `V přístavním městě mizí lidé tak potichu, až to děsí víc než křik. Žádná krev, žádná rozbitá okna, žádné stopy boje. Jen prázdné postele a vymluvená místa v noclehárnách, kde ještě včera někdo chrápal. „On si vybírá,“ šeptá ti krčmář, zatímco stahuje okenice. „Vždycky takové, po kterých se nikdo moc ptát nebude. Tuláky, děvky, opilce.“ Z uličky se sem občas zatoulá slabý pach vlhka, kamene a starého vína – nebo je to krev?
+       intro: `V přístavním městě mizí lidé tak potichu, až to děsí víc než křik. Žádná krev, žádná rozbitá okna, žádné stopy boje. Jen prázdné postele, kde ještě včera někdo chrápal. „On si vybírá,“ šeptá ti krčmář, zatímco stahuje okenice. „Vždycky takové, po kterých se nikdo moc ptát nebude. Tuláky, děvky, opilce.“ Z uličky se sem občas zatoulá slabý pach vlhka, kamene a starého vína – nebo je to krev?
 
 Na střeše protějšího domu na okamžik zahlédneš siluetu. Štíhlá postava s tak klidným držením těla, až to působí spíš znuděně než hrozivě. Máš dojem, že se ti dívá přímo do očí, i když jí obličej zakrývá stín. Pak se jen lehce pohne a zmizí, jako by ji spolkla noc. V kanálech pod městem je tma hustší než jinde a šepot o vyšším upírovi je čím dál hlasitější. Jak k takové bytosti přistoupíš – mečem, nebo rozumem?`,
         image: "img/upir.png",
@@ -924,6 +924,7 @@ Když přistoupíš ke dveřím, drobná zrnka prachu se zvednou, jako by tě n�
   </script>
 </body>
 </html>
+
 
 
 
