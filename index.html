@@ -760,7 +760,7 @@ Když přistoupíš ke dveřím, drobná zrnka prachu se zvednou, jako by tě n�
       const monster = monsters[index];
       monsterNameEl.textContent = monster.name;
       monsterProgressEl.textContent = `Kontrakt ${index + 1} z ${monsters.length}`;
-      monsterIntroEl.textContent = monster.intro;
+      monsterIntroEl.innerHTML = monster.intro;
 
       if (monster.image) {
         monsterImageEl.innerHTML = `
@@ -921,6 +921,7 @@ Když přistoupíš ke dveřím, drobná zrnka prachu se zvednou, jako by tě n�
   </script>
 </body>
 </html>
+
 
 
 
