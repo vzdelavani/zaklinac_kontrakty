@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+    * {
+  <title>Zaklínačské kontrakty – knihovní gamebook</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-alt: #020617;
+      --card: #111827;
+      --accent: #eab308;
+      --accent-soft: rgba(234, 179, 8, 0.1);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --danger: #f97373;
+      --success: #4ade80;
+      --border: #1f2933;
+    }
+
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1f2937, #020617 55%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+    }
+
+    .app {
+      max-width: 900px;
+      width: 100%;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header {
+      background: linear-gradient(135deg, rgba(15,23,42,0.9), rgba(15,118,110,0.4));
+      border-radius: 18px;
+      padding: 16px 20px;
+      border: 1px solid rgba(148,163,184,0.3);
+      box-shadow: 0 18px 40px rgba(15,23,42,0.7);
+    }
+
+    header h1 {
+      margin: 0 0 4px;
+      font-size: 1.6rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, #111827, #020617 70%);
+      border-radius: 18px;
+      padding: 16px 18px 18px;
+      border: 1px solid var(--border);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    h2, h3 {
+      margin-top: 0;
+    }
+
+    #start-screen ul {
+      padding-left: 20px;
+      margin-top: 8px;
+      margin-bottom: 12px;
+    }
+
+    #start-screen li {
+      margin-bottom: 4px;
+      font-size: 0.95rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      background: radial-gradient(circle at top, #22c55e, #22c55e33);
+      color: #022c22;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.95rem;
+      gap: 6px;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease, border-color 0.08s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(34,197,94,0.35);
+      background: radial-gradient(circle at top, #22c55e, #16a34a);
+      border-color: rgba(52,211,153,0.8);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    .btn-secondary {
+      background: radial-gradient(circle at top, #1f2937, #020617);
+      color: var(--text);
+      border-color: rgba(148,163,184,0.5);
+      box-shadow: none;
+    }
+
+    .btn-secondary:hover {
+      background: radial-gradient(circle at top, #374151, #020617);
+    }
+
+    .monster-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .monster-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .monster-progress {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .monster-image {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px dashed rgba(148,163,184,0.5);
+      padding: 10px 12px;
+      background: radial-gradient(circle at top, #0f172a, #020617);
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .monster-image img {
+      width: 100%;
+      border-radius: 12px;
+      display: block;
+    }
+
+    .monster-intro {
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    #options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(148,163,184,0.4);
+      background: radial-gradient(circle at top left, #020617, #020617 60%);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.93rem;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      transition: transform 0.06s ease, box-shadow 0.06s ease, border-color 0.06s ease, background 0.06s ease;
+    }
+
+    .option-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(15,23,42,0.9);
+      border-color: rgba(234,179,8,0.7);
+      background: radial-gradient(circle at top left, #111827, #020617 65%);
+    }
+
+    .option-btn span.label {
+      min-width: 2rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .option-btn.disabled {
+      cursor: default;
+      opacity: 0.8;
+    }
+
+    .option-btn.correct {
+      border-color: var(--success);
+      box-shadow: 0 0 0 1px rgba(74,222,128,0.4);
+    }
+
+    .option-btn.bad {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 1px rgba(248,113,113,0.35);
+    }
+
+    #feedback {
+      border-radius: 12px;
+      padding: 8px 10px;
+      background: radial-gradient(circle at top left, #111827, #020617);
+      border: 1px solid rgba(148,163,184,0.4);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    #feedback strong {
+      color: var(--accent);
+    }
+
+    footer {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .score-pill {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 0.8rem;
+      background: var(--accent-soft);
+      color: var(--accent);
+      margin-left: 4px;
+    }
+
+    #current-score {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    #end-screen .table {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      background: radial-gradient(circle at top left, #020617, #020617 60%);
+      border-radius: 12px;
+      padding: 8px 10px;
+      border: 1px solid rgba(55,65,81,0.8);
+    }
+
+    #end-screen .table div {
+      margin-bottom: 4px;
+    }
+
+    #final-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    #final-score {
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.3rem;
+      }
+      .card {
+        padding: 12px 14px 14px;
+      }
+      .monster-intro {
+        font-size: 0.9rem;
+      }
+      .option-btn {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Zaklínačské kontrakty</h1>
+      <p>Malý interaktivní gamebook pro knihovní zaklínače a zaklínačky.</p>
+    </header>
+
+    <main>
+      <!-- Start screen -->
+      <section id="start-screen" class="card">
+        <h2>Jak hrát</h2>
+        <p>Čeká tě 10 zaklínačských kontraktů. U každého si vybereš jednu z pěti možností řešení.</p>
+        <ul>
+          <li>Za chytré a efektivní řešení získáš více bodů.</li>
+          <li>Riskantní nebo hloupé nápady můžou stát body – někdy i život.</li>
+          <li>Na konci získáš zaklínačský titul podle celkového skóre.</li>
+        </ul>
+        <p style="font-size:0.9rem;color:#9ca3af;">
+          Hra se dá použít na PC, notebooku nebo tabletu. Stačí klikat na odpovědi, nic se nepíše z klávesnice.
+        </p>
+        <button id="start-button" class="btn">
+          ▶ Začít hru
+        </button>
+      </section>
+
+      <!-- Game screen -->
+      <section id="game-screen" class="card hidden">
+        <div class="monster-header">
+          <div class="monster-name" id="monster-name"></div>
+          <div class="monster-progress" id="monster-progress"></div>
+        </div>
+        <div class="monster-image" id="monster-image"></div>
+        <p class="monster-intro" id="monster-intro"></p>
+        <div id="current-score"></div>
+        <div id="options-container"></div>
+        <div id="feedback" class="hidden"></div>
+        <button id="next-button" class="btn-secondary hidden">Další kontrakt</button>
+      </section>
+
+      <!-- End screen -->
+      <section id="end-screen" class="card hidden">
+        <h2>Výsledek</h2>
+        <p id="final-score"></p>
+        <p id="final-title"></p>
+        <p id="final-desc"></p>
+        <div class="table">
+          <div><strong>Tabulka hodnocení</strong></div>
+          <div>22–30 bodů – Legendární zaklínač / zaklínačka</div>
+          <div>15–21 bodů – Zkušený profesionál</div>
+          <div>7–14 bodů – Zaklínačský učedník</div>
+          <div>0–6 bodů – Kandidát na vesnickou pamětní desku</div>
+          <div>&lt; 0 bodů – Varování pro ostatní</div>
+        </div>
+        <br>
+        <button id="restart-button" class="btn">↺ Hrát znovu</button>
+      </section>
+    </main>
+
+    <footer>
+      Tip: V knihovně můžete dát k webu QR kód; návštěvníci si hru spustí na mobilu nebo tabletu.
+    </footer>
+  </div>
+
+  <script>
+    const monsters = [
+      {
+        name: "Ghúl na hřbitově",
+        intro:`Na hřbitově za vsí už třetí noc po sobě někdo rozhrabal čerstvé hroby. Z mokré hlíny trčí kříže nakřivo, věnce jsou rozšlapané a po kamenech stékají šmouhy bahna smíchaného s něčím, co je lepší raději moc nezkoumat. Hrobník tě přivítá se svítilnou v ruce a třesoucím se hlasem: „Já to slyšel, mistře. Chrochtání, mlaskání… a pak ticho. A když jsem vyběhl ven, viděl jsem jen tyhle stopy.“ Ukáže ti do rozrytého bláta – na rýhy od drápů a škrábance.
+
+Vesničané se shlukují u hřbitovní brány a drží si talismany u krku, jako by to byla skutečná ochrana. „Mrtví nemají klid,“ šeptá stařena v tlumeném kruhu světla. „Někdo nám tu žere příbuzné…“ Vzduch je těžký, noční mlha leží mezi náhrobky a ty víš, že někde tam venku, mezi kříži, už něco čeká. Jak se připravíš na lov ghúla?`,
+        image: "img/ghul.png",
+        imageAlt: "Ghúl na hřbitově",
+        options: [
+          {
+            text: "Namažeš stříbrný meč olejem proti nekrofágům a vylákáš ghúla k bráně, kde máš prostor.",
+            points: 2,
+            comment: "Dobrá, solidní zaklínačská volba. Olej proti nekrofágům a stříbrný meč jsou přesně to, co ghúl nesnáší, ale přímá konfrontace u brány může být riskantní, pokud není dobře připravený terén."
+          },
+          {
+            text: "Pár starých mrtvol položíš na kraj hřbitova jako návnadu a připravíš se v úkrytu.",
+            points: 3,
+            comment: "Nejchytřejší postup. Vytvoříš návnadu, máš ghúla přesně tam, kde ho chceš, a sám zůstáváš v úkrytu. Minimalizuješ riziko a využíváš hlavu, nejen svaly."
+          },
+          {
+            text: "Vrhneš mezi hroby ohnivou bombu a doufáš, že se trefíš.",
+            points: 1,
+            comment: "Ohnivá bomba může pomoct, ale je to hrubá síla bez jistoty. Můžeš ghúla zasáhnout, ale taky spálit hroby a udělat si z vesničanů nepřátele."
+          },
+          {
+            text: "Počkáš do rána a doufáš, že se ghúl ukáže i za světla.",
+            points: 0,
+            comment: "Doufat, že se noční příšera ukáže za dne a bude slabší, je trochu hazard. Ghúl ti klidně unikne nebo prostě jen změní čas lovu."
+          },
+          {
+            text: "Rozběhneš se na něj s ocelovým mečem a doufáš v nejlepší.",
+            points: -1,
+            comment: "Ocelový meč na nekrofága a bez přípravy? To je recept na rychlou smrt. Příšera zabije tebe, ne ty ji."
+          }
+        ]
+      },
+      {
+        name: "Utopenci v přístavu",
+        intro: `Přístav je v noci podezřele tichý. Nikdo tu nezpívá opilecké písničky, lampy se rychle zhasínají a okenice se zavírají, jakmile se přiblížíš k molu. Voda se jen lehce vzdouvá, ale na mokrých prknech vidíš slizké otisky rukou a podivných stop. Lodník s ošoupanou čepicí se k tobě nakloní tak blízko, až cítíš pivo a strach: „Nejhorší je, že nic neslyšíš,“ šeptá. „Jen šplouchání… a pak se člověk prostě nevrátí.“
+
+Na konci mola visí roztržené lano a ve tmě pod tebou cosi tiše zabublá. Jiný muž se přidá, oči vytřeštěné: „kamaráda stáhli pod hladinu, ani nestihl zařvat. Voda byla klidná, jako když to hrob přiklopí.“ Vlny se pomalu tříští o piloty a pak – koutkem oka – zahlédneš něco bledého, co se hned zase stáhne do hlubin. Utopenci mají zjevně nové loviště. Jak budeš postupovat proti tvorům z vody?`,
+
+        image: "img/utopenci.png",
+        imageAlt: "Utopenci v přístavu",
+        options: [
+          {
+            text: "Zjistíš od rybářů, kde přesně utopenci útočí, a nalákáš je na mělčinu.",
+            points: 3,
+            comment: "Nejlepší taktická volba. Informace jsou základ, mělčina bere utopencům jejich výhodu vody a dává ji tobě."
+          },
+          {
+            text: "Vylákáš je světlicí na molo a bojuješ na pevném dřevě.",
+            points: 1,
+            comment: "Boj na molu je lepší než ve vodě, ale pořád jsi blízko okraje a riziko stržení do vody je velké."
+          },
+          {
+            text: "Střelíš kuší do vody a doufáš, že se trefíš dřív, než něco popadne loď.",
+            points: 2,
+            comment: "Střílet do vody není ideální, ale můžeš aspoň několik utopenců zranit nebo odehnat, zvlášť pokud víš, kde se drží."
+          },
+          {
+            text: "Pošleš k vodě místní stráž, ať to zkusí nejdřív sami.",
+            points: 0,
+            comment: "Nechat to nejdřív zkusit stráže znamená, že se kontrakt sice „nějak řeší“, ale ty neriskuješ ani nezískáš. Příšery nejspíš zůstanou problémem."
+          },
+          {
+            text: "Plaveš jim vstříc v plné zbroji. Co se může pokazit?",
+            points: -1,
+            comment: "Plavat v plné zbroji vstříc utopencům je téměř jistá sebevražda. Udolají tě a stáhnou pod hladinu dřív, než vytáhneš meč."
+          }
+        ]
+      },
+      {
+        name: "Striga ve starém paláci",
+        intro: `Ruiny starého paláce se tyčí nad vesnicí jako shnilý zub trčící z dásně. V noci z něj doléhá zvuk škrábání, lomcování dveřmi a řev, který není ani lidský, ani zvířecí. Vesničané se po setmění neodvažují chodit po cestě, která vede pod zámkem – raději kvůli tomu obcházejí celé údolí. V zakouřené krčmě ti stařena nalévá pálenku a přitom si tě měří zpod hustého obočí: „Prokleli jeho dítě, chápeš?“ mručí. „Ještě v břiše. A teď… teď to chodí po chodbách paláce.“
+
+Když se k paláci přiblížíš, vítr skrze rozbitá okna nese pach zatuchliny a něčeho starého, čpavého. Na zdi u brány jsou hluboké rýhy po drápech – jako by se někdo snažil dostat ven, ne dovnitř. Slyšíš tiché zavrčení následované tlumeným, dutým úderem, jako když cosi s velkou silou narazí do kamene. Kletba stále drží a monstrum uvnitř má dnes zase hlad. Co uděláš se strigou, která straší ve starém paláci?`,
+        image: "img/striga.png",
+        imageAlt: "Striga ve starém paláci",
+        options: [
+          {
+            text: "Zjistíš celou prokletou legendu a pokusíš se strigu zamknout v kryptě do svítání.",
+            points: 3,
+            comment: "Nejvyšší liga: pochopit kletbu a pokusit se ji zlomit do svítání. Nejen zabiješ monstrum, ale možná zachráníš člověka – to je práce hodná legendy."
+          },
+          {
+            text: "Připravíš stříbrný meč a znak Yrden, abys ji v boji zpomalil/a.",
+            points: 2,
+            comment: "Klasické zaklínačské řešení – boj s Yrdenem a stříbrem. Funguje, ale pořád je to přímá řežba s velmi nebezpečnou příšerou."
+          },
+          {
+            text: "Rozhodneš se vše vypálit – zapálíš palác i se strigou uvnitř.",
+            points: 1,
+            comment: "Vypálit palác může problém „vyřešit“, ale je to hrubé, riskantní a snadno zničíš i důležité stopy pro skutečné sejmutí kletby."
+          },
+          {
+            text: "Počkáš, až problém zmizí sám. Třeba striga najde jiné město.",
+            points: -1,
+            comment: "Doufat, že striga změní adresu, je spíš zbožné přání. Mezitím bude zabíjet dál, a až se vrátíš, možná budou mrtvá celá panství."
+          },
+          {
+            text: "S ocelovým mečem vběhneš dovnitř bez jakékoli přípravy.",
+            points: 0,
+            comment: "Ocel bez přípravy je špatná volba, ale ne nutně okamžitá smrt, pokud rychle utečeš. Každopádně kontrakt nesplníš."
+          }
+        ]
+      },
+      {
+        name: "Lesní duch v hlubokém hvozdu",
+        intro: `Hvozd za vsí je příliš tichý. Žádní ptáci, žádné praskání větví pod zvěří – jen vítr, který se proplétá korunou stromů a občas s sebou přinese šepot, který si raději nezkoumáš. Lovec, který tě vede, tě zastaví gestem ruky: „Tady,“ ukáže na kmen hustého smrku. Do kůry jsou vyřezané zvláštní znaky – směs starých run a něčeho prastarého, co nevypadá lidsky. Pod stromem leží roztrhaná košile a kost, ohlodaně čistá.
+
+„Tohle neudělali vlci,“ říká lovec tiše a ohlíží se přes rameno. „Je to, jako by si někdo v lese značil… trofeje.“ Čím hlouběji jdeš, tím víc máš pocit, že tě něco sleduje mezi stromy. Tu a tam zahlédneš pohyb – příliš vysoký, příliš tichý na obyčejné zvíře. Ten les něco vlastní a to něco zjevně nesouhlasí s tím, že po jeho zemi chodí lidé. Jak se postavíš lesnímu duchovi, který brání svůj hvozd?`,
+
+        image: "img/lesij.png",
+        imageAlt: "Lesní duch v hvozdu",
+        options: [
+          {
+            text: "Vystopuješ jeho sídlo a připravíš se na boj v jeho kruhu pomocí Yrdenu a pastí.",
+            points: 1,
+            comment: "Klasický „bojový“ přístup: pasti, Yrden, přímá konfrontace. Může fungovat, ale lesní duch je doma v lese a chyby trestá tvrdě."
+          },
+          {
+            text: "Zkusíš s duchem mluvit a nabídnout dohodu: méně lidí v lese za méně útoků.",
+            points: 3,
+            comment: "Pokus o dohodu a obnovení rovnováhy je často to nejúčinnější. Duchové lesa nejsou vždy nutně zlí – někdy jen brání své území."
+          },
+          {
+            text: "Rozvěsíš kolem vesnice zvonky a totemy a doufáš, že ducha odradí.",
+            points: 0,
+            comment: "Symboly a zvonky mají spíš psychologický efekt na vesničany než na skutečného tvora spojeného s lesem."
+          },
+          {
+            text: "Prostě přestaneš chodit do lesa. Z problémů se dá i odejít.",
+            points: 2,
+            comment: "Stáhnout lidi z lesa a omezit pohyb může výrazně snížit počet obětí – není to heroické, ale praktické. Duch bude mít méně příležitostí zabíjet."
+          },
+          {
+            text: "Zatroubíš na roh a vyrazíš do lesa kácet stromy, aby neměl kde bydlet.",
+            points: -1,
+            comment: "Kácet les kvůli lesnímu duchovi je jistý způsob, jak si z nepřítele udělat posedlou, ještě zuřivější bytost – a pravděpodobně přijdeš o život i podporu vesnice."
+          }
+        ]
+      },
+      {
+        name: "Vyšší upír v městském podsvětí",
+       intro: `V přístavním městě mizí lidé tak potichu, až to děsí víc než křik. Žádná krev, žádná rozbitá okna, žádné stopy boje. Jen prázdné postele, kde ještě včera někdo chrápal. „On si vybírá,“ šeptá ti krčmář, zatímco stahuje okenice. „Vždycky takové, po kterých se nikdo moc ptát nebude. Tuláky, děvky, opilce.“ Z uličky se sem občas zatoulá slabý pach vlhka, kamene a starého vína – nebo je to krev?
+
+Na střeše protějšího domu na okamžik zahlédneš siluetu. Štíhlá postava s tak klidným držením těla, až to působí spíš znuděně než hrozivě. Máš dojem, že se ti dívá přímo do očí, i když jí obličej zakrývá stín. Pak se jen lehce pohne a zmizí, jako by ji spolkla noc. V kanálech pod městem je tma hustší než jinde a šepot o vyšším upírovi je čím dál hlasitější. Jak k takové bytosti přistoupíš – mečem, nebo rozumem?`,
+        image: "img/upir.png",
+        imageAlt: "Vyšší upír v podsvětí",
+        options: [
+          {
+            text: "Zmapuješ zmizení, najdeš jeho úkryt a zkusíš vyjednávat – vyšší upíry se nedá jen tak zabít.",
+            points: 2,
+            comment: "Pochopit motivace bytosti, která je starší než většina měst, je klíč. Vyjednávání může být nečekaně bezpečnější než přímý útok."
+          },
+          {
+            text: "Připravíš elixíry, stříbrný meč a uvězníš ho v pasti se slunečním světlem.",
+            points: 3,
+            comment: "Vyšší upíry se málokdy dá prostě zabít, ale dobrá příprava, past a sluneční světlo ti dávají velkou výhodu. To je špičkový profesionální přístup."
+          },
+          {
+            text: "Požádáš mága, aby upíra vysledoval kouzlem, a kryješ mu záda.",
+            points: 1,
+            comment: "Spolupráce s mágem je rozumná, ale stále jdeš „naslepo“ do střetu s něčím, co je starší a chytřejší než většina lidí."
+          },
+          {
+            text: "Rozvěsíš kolem města česnek a svaté symboly – na upíry to přece platí.",
+            points: 0,
+            comment: "Česnek a svaté symboly jsou dobré tak na uklidnění pověrčivých obyvatel. Na vyššího upíra nezaberou."
+          },
+          {
+            text: "Opiješ se s místními žoldáky a jdeš do kanálů řvát, ať vyleze.",
+            points: -1,
+            comment: "Ožralé hulákání v kanálech je rychlý způsob, jak upíra pobavit – a pak si tě dát k večeři."
+          }
+        ]
+      },
+      {
+        name: "Kikimora na bažinách",
+        intro: `Bažina dýchá vlastním tempem. Každý krok ti nohu vtahuje trochu hlouběji do bahna a z rákosí se ozývá monotónní šustění, jako kdyby tě okolní rostliny pomalu obkličovaly. Vzduch je těžký, sladký a lepkavý, plný hmyzu, který se lepí na kůži. Na jednom z bahnitých ostrůvků narazíš na roztrhaný batoh, potrhanou pláštěnku a zbytky pavučin, které vypadají až příliš silně, než aby je utkal obyčejný pavouk.
+
+„Tudy šel kupec,“ vysvětluje ti mladý posel, který tě sem přivedl, a nervózně se dívá pod nohy. „Našel jsem jen tohle.“ Vedle batohu leží něco, co kdysi bývalo botou – se zbytky nohy uvnitř. Do bahna kolem vedou stopy mnoha štíhlých končetin, které mizí v hloubce, odkud se ozývá slabé, chitinové cvakání. Kikimora si tady zřídila loviště a lidské maso je pro ni jen další zdroj potravy. Jak ji ulovíš, aniž se sama bažina stane tvým hrobem?`,
+        image: "img/kikimora.png",
+        imageAlt: "Kikimora na bažinách",
+        options: [
+          {
+            text: "Připlížíš se po souši, označíš si únikové cesty a nalákáš kikimoru na suchý ostrůvek.",
+            points: 3,
+            comment: "Nalákat kikimoru na suchý ostrůvek a mít pod nohama pevnou půdu je skvělý taktický tah. Bažina je její, ne tvoje."
+          },
+          {
+            text: "Použiješ znamení Quen a vrazíš do ní stříbrným mečem přímo v bahně.",
+            points: 2,
+            comment: "Quen a stříbrný meč v přímém střetu jsou účinné, ale bahno tě zpomaluje a chyba může být fatální."
+          },
+          {
+            text: "Naházíš do bažiny pasti na medvědy a doufáš, že do jedné vleze.",
+            points: 0,
+            comment: "Pasti na medvědy mohou něco zachytit, ale kikimora je rychlá a mazaná. Šance jsou spíš náhodné."
+          },
+          {
+            text: "Střelíš pár šípů do mlhy a vrátíš se do vesnice s historkou o velké bitvě.",
+            points: 1,
+            comment: "Občas něco trefíš a můžeš ji zranit nebo odehnat, ale je to spíš plýtvání šípy než jistý plán."
+          },
+          {
+            text: "Rozběhneš se do močálu v noci bez lektvarů a světla.",
+            points: -1,
+            comment: "V noci, v močálu a bez přípravy? Přesně tak vznikají varovné historky pro mladé zaklínače."
+          }
+        ]
+      },
+      {
+        name: "Polednice na polích",
+        intro: `Je přesně poledne a žár je tak silný, že se vzduch nad obilím tetelí jako voda. Pole jsou tichá – žádný zpěv ženců, žádný svist srpů. Sedlák tě vede k místu, kde to začalo. „Nejdřív jsme si mysleli, že je jim jen horko,“ říká a utírá si čelo. „Ale pak začali mluvit s někým, koho jsme my neviděli. A pak prostě padli.“ V ušlapaném kruhu uprostřed pole vidíš stopy, které se náhle ztrácejí – jako by se postava rozplynula v horkém vzduchu.
+
+V dálce, tam, kde se moře zlatých klasů setkává s ostrou hranou stínu, zahlédneš bledou siluetu. Stojí nehnutě, pod plachetkou osoba, a přesto máš pocit, že tě sleduje. Vzduch kolem tebe ztěžkne a na okamžik se ti zatočí hlava – jako by ti někdo přitiskl rozpálenou ruku na čelo. Polednice není obyčejný přízrak; je to kletba spojená s časem i vinou. Co uděláš pro to, aby pole zase patřila lidem?`,
+        image: "img/polednice.png",
+        imageAlt: "Polednice na polích",
+        options: [
+          {
+            text: "Zjistíš, na čem je kletba založena, svoláš rodinu oběti a provedeš rituál, aby nalezla klid.",
+            points: 3,
+            comment: "Pochopit pozadí kletby a rituálně ji zlomit je nejlepší řešení – přestane trápit i budoucí generace."
+          },
+          {
+            text: "Vyčkáš na poledne v kruhu Yrdenu a donutíš polednici se ukázat, pak ji oslabíš znameními.",
+            points: 2,
+            comment: "Přímý boj s polednicí v Yrdenu může zabrat, ale je to nebezpečný střet se silnou kletbou v jejím čase."
+          },
+          {
+            text: "Požádáš vesničany, ať prostě nechodí na pole v poledne, a doufáš v nejlepší.",
+            points: 1,
+            comment: "Nechodit na pole v poledne sice sníží počet obětí, ale problém jen odsouváš. Polednice nikam nezmizí."
+          },
+          {
+            text: "Na poledne se schováš do sklepa a doufáš, že to po pár týdnech přestane samo.",
+            points: 0,
+            comment: "Schovat se do sklepa a doufat, že to přejde, není strategie. Kletby se obvykle samy nerozpustí."
+          },
+          {
+            text: "Rozběhneš se na ni s bojovým pokřikem přes rozpálené pole bez přípravy.",
+            points: -1,
+            comment: "Rozběhnout se bez přípravy přes žhnoucí pole přímo k polednici je skoro jisté, že skončíš jako další oběť."
+          }
+        ]
+      },
+      {
+        name: "Nekkeři v rokli",
+        intro: `Rokle před tebou se svírá jako kamenné hrdlo. Svahy jsou strmé, pokryté uvolněnými balvany a kořeny, které se drží ve skále jako nehty vesničana na posledním groši. Obchodník, který tě sem přivedl, nervózně přešlapuje na kraji: „Karavana jela tudy. Byli ozbrojení, zkušení… a nic se nevrátilo. Jen ticho.“ V prachu na dně rokle vidíš drobné šlépěje a mezi kameny se bělají kosti – některé příliš dlouhé a tenké, než aby patřily zvířeti.
+
+Z hloubi průsmyku se ozve tiché chichotání a rychlé zašustění, jako když se něco malého, ale sebejistého přesouvá z úkrytu do úkrytu. Nekkeři milují místa, kde je člověk obklíčený ze všech stran a nemá kam uhnout. Tady dole budeš lovnou zvěří ty, pokud si to nenecháš projít hlavou ještě před tím, než vstoupíš. Jak vyčistíš roklinu tak, abys z ní odešel po svých?`,
+        image: "img/nekker.png",
+        imageAlt: "Nekkeři v rokli",
+        options: [
+          {
+            text: "Připravíš pasti, bombami zatarasíš únikové cesty a roklinu čistíš po částech.",
+            points: 2,
+            comment: "Pasti a bomby jsou dobré, ale rokle je zrádná – chyba může znamenat, že ses uvěznil s nimi."
+          },
+          {
+            text: "Vylákáš nekery hlukem na širší cestu, kde nemají výhodu výšky.",
+            points: 3,
+            comment: "Vylákat nekery ven na širší cestu, kde nemají výhodu terénu, je chytrý způsob, jak boj otočit ve svůj prospěch."
+          },
+          {
+            text: "Vjedeš s vozem přímo do rokle a doufáš, že je přejedeš.",
+            points: 1,
+            comment: "Vjet s vozem do rokle může pár nekerů rozdrtit, ale pokud vůz uvízne, jsi snadná kořist."
+          },
+          {
+            text: "Požádáš jednoho žoldáka, ať jde napřed, a sleduješ, co se stane.",
+            points: 0,
+            comment: "Poslat žoldáka napřed je spíš zbabělý testovací balónek než skutečné řešení. Problém zůstává."
+          },
+          {
+            text: "Seskočíš dolů do rokle v noci, protože aspoň neuvidíš, kolik jich je.",
+            points: -1,
+            comment: "Seskočit v noci do rokle, aniž vidíš, kolik jich je, je skoro jistá cesta do masařičího bufetu."
+          }
+        ]
+      },
+      {
+        name: "Bruxa v opuštěném domě",
+        // Bruxa v opuštěném domě
+intro: `Dům na kraji města stojí stranou ostatních, jako by se od něj i ostatní stavby raději odtáhly. Okenice jsou přibité prkny, ale přesto zpoza nich občas probleskne slabé, mléčné světlo. V noci odsud lidé slyší šepot, smích a pak náhlé, utnuté výkřiky, které možná zazněly jen v jejich hlavě – a možná ne. „Šla jsem kolem a slyšela jsem, jak mě oslovuje jménem,“ vypráví ti bledá švadlena, ruce zacuchané nitěmi. „Nikdo tam nebyl. Ale hlas byl… blízko.“
+
+Když přistoupíš ke dveřím, drobná zrnka prachu se zvednou, jako by tě někdo právě pozoroval zpoza prken. Na vnitřní straně kliky vidíš zaschlé šmouhy, bílé od prstů, které se snažily dostat ven. Vzduch je tichý, ale v tvé hlavě jako by se usadil cizí tón – slabý, lákavý, až příliš jemný na to, aby patřil člověku. Bruxa si z toho domu udělala hnízdo a město pomalu zkouší, kolik hlasů dokáže umlčet, než se někdo odváží zaklepat. Jak si s ní poradíš, než se staneš jedním z těch hlasů?`,
+ 
+        image: "img/bruxa.png",
+        imageAlt: "Bruxa v domě",
+        options: [
+          {
+            text: "Připravíš se znakem Yrden, elixíry a čekáš, až bruxa naruší tvůj kruh.",
+            points: 3,
+            comment: "Připravený kruh Yrdenu, elixíry a plán čekat na moment, kdy bruxa naruší tvůj prostor – to je přesně způsob, jak přežít setkání s tak nebezpečnou bytostí."
+          },
+          {
+            text: "Vylákáš ji na otevřený dvůr hlukem a rozbitým nábytkem, abys jí omezil/a krytí.",
+            points: 1,
+            comment: "Vylákat ji na dvůr a omezit jí krytí může pomoct, ale pořád bojuješ s bytostí, která se pohybuje rychleji, než stačíš mrknout."
+          },
+          {
+            text: "Pokusíš se ji překřičet a zmást vlastním hlasitým křikem.",
+            points: -1,
+            comment: "Pokus ji překřičet je spíš sebevražedná show. Bruxa má hlasovou zbraň, ty máš akorát vyřvané hlasivky. Skončíš rozcupovaný."
+          },
+          {
+            text: "Rozvěsíš po domě česnek a svaté symboly – na upíry přece platí všechno svaté.",
+            points: 0,
+            comment: "Česnek a svaté symboly možná zklidní sousedy, ale bruxu sotva. Přízrak bude dál lovit."
+          },
+          {
+            text: "Vběhneš do tmy bez jakékoli přípravy, protože máš pocit, že tě stejně neslyší.",
+            points: 2,
+            comment: "Vběhnout do tmy bez velké přípravy je šílenost, ale pokud máš dobré reflexy, můžeš s překvapením a štěstím uspět – za cenu velkého rizika."
+          }
+        ]
+      },
+      {
+        name: "Golem ve staré svatyni",
+        intro: `Starou svatyni dávných mágů najdeš hluboko v lese, kde stromy rostou příliš blízko u sebe a ticho je až nepříjemně dokonalé. Kameny jsou porostlé mechem, runy na zdech sotva čitelné, ale pořád cítíš zbytkové chvění dávné moci. Země se zachvěje ještě dřív, než ho uvidíš. Jeden, dva, tři dunivé kroky a pak se mezi troskami vynoří silueta z masivních bloků – kamenný strážce, oči prozářené mdlým světlem magických pečetí.
+
+„Dřív hlídal poklad,“ vysvětluje ti mladý učenec, který tě sem přivedl, a nervózně svírá svitek, jako by mu mohl posloužit jako štít. „Teď útočí na všechno, co se pohne. Zničil oltář, rozdrtil několik stromů… Pokud ho někdo nezastaví, půjde se dál.“ Golem s tupou, neúprosnou vytrvalostí obchází zbytek svatyně dokola, každý krok zanechává v zemi praskliny. Tohle není monstrum, které loví z hladu nebo ze strachu – plní rozkaz, který už nikdo neumí odvolat. Jak golemův problém vyřešíš, aniž skončíš rozmačkaný pod jeho patou?`,
+
+        image: "img/golem.png",
+        imageAlt: "Golem ve svatyni",
+        options: [
+          {
+            text: "Zjistíš, jak golem funguje, a pokusíš se deaktivovat magické pečetě, které ho ovládají.",
+            points: 3,
+            comment: "Nejlepší řešení je pochopit magii, která golema ovládá, a vypnout ji. Zastavíš hrozbu u kořene, bez nekonečného ničení kamene."
+          },
+          {
+            text: "Nalákáš golema na úzký most, kde se nemůže dobře otočit, a tlučeš do jeho kloubů.",
+            points: 2,
+            comment: "Lákání na most a útok do kloubů je chytrá bojová taktika – využíváš terén a slabá místa."
+          },
+          {
+            text: "Zkusíš ho rozptýlit znamením Aard a doufáš, že se rozsype.",
+            points: 1,
+            comment: "Aard může pomoci ho rozhodit a získat čas, ale sám o sobě golem problém neřeší – spíš krátkodobá výhoda."
+          },
+          {
+            text: "Hážeš po něm kameny. Je taky z kamene, tak to musí fungovat.",
+            points: -1,
+            comment: "Házet po golemovi kameny je spíš komediální vložka než taktika. Kameny neřeší kámen – zato on řeší tebe dost razantně."
+          },
+          {
+            text: "Zaútočíš na něj stříbrným mečem – vypadá draze, tak to asi bude magické monstrum.",
+            points: 0,
+            comment: "Stříbrný meč na golema je špatná volba nástroje, ale když máš dobrou fyzičku a štěstí, můžeš aspoň přežít útok a stáhnout se – kontrakt ale neplníš."
+          }
+        ]
+      }
+    ];
+
+    let currentIndex = 0;
+    let totalScore = 0;
+
+    const startScreen = document.getElementById("start-screen");
+    const gameScreen = document.getElementById("game-screen");
+    const endScreen = document.getElementById("end-screen");
+
+    const startButton = document.getElementById("start-button");
+    const nextButton = document.getElementById("next-button");
+    const restartButton = document.getElementById("restart-button");
+
+    const monsterNameEl = document.getElementById("monster-name");
+    const monsterProgressEl = document.getElementById("monster-progress");
+    const monsterIntroEl = document.getElementById("monster-intro");
+    const monsterImageEl = document.getElementById("monster-image");
+    const optionsContainer = document.getElementById("options-container");
+    const feedbackEl = document.getElementById("feedback");
+    const currentScoreEl = document.getElementById("current-score");
+
+    const finalScoreEl = document.getElementById("final-score");
+    const finalTitleEl = document.getElementById("final-title");
+    const finalDescEl = document.getElementById("final-desc");
+
+    function shuffle(array) {
+      const arr = array.slice();
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function showMonster(index) {
+      const monster = monsters[index];
+      monsterNameEl.textContent = monster.name;
+      monsterProgressEl.textContent = `Kontrakt ${index + 1} z ${monsters.length}`;
+      monsterIntroEl.textContent = monster.intro;
+
+      if (monster.image) {
+        monsterImageEl.innerHTML = `
+          <img src="${monster.image}" alt="${monster.imageAlt || monster.name}">
+        `;
+      } else {
+        monsterImageEl.innerHTML = "";
+      }
+
+      feedbackEl.classList.add("hidden");
+      feedbackEl.textContent = "";
+      nextButton.classList.add("hidden");
+      currentScoreEl.innerHTML = `Průběžné skóre: <span class="score-pill">${totalScore} bodů</span>`;
+
+      optionsContainer.innerHTML = "";
+      const shuffledOptions = shuffle(monster.options);
+      const letters = ["A", "B", "C", "D", "E"];
+
+      shuffledOptions.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.dataset.points = opt.points;
+        btn.dataset.comment = opt.comment;
+        btn.dataset.isChosen = "false";
+
+        const labelSpan = document.createElement("span");
+        labelSpan.className = "label";
+        labelSpan.textContent = letters[idx] + ")";
+
+        const textSpan = document.createElement("span");
+        textSpan.textContent = opt.text;
+
+        btn.appendChild(labelSpan);
+        btn.appendChild(textSpan);
+
+        btn.addEventListener("click", () => handleAnswerClick(btn));
+
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function handleAnswerClick(button) {
+      const alreadyDone = Array.from(optionsContainer.querySelectorAll(".option-btn"))
+        .some(b => b.classList.contains("disabled"));
+      if (alreadyDone) return;
+
+      const points = parseInt(button.dataset.points, 10);
+      const comment = button.dataset.comment;
+
+      totalScore += points;
+
+      const btns = optionsContainer.querySelectorAll(".option-btn");
+      btns.forEach(b => {
+        b.classList.add("disabled");
+      });
+
+      if (points > 0) {
+        button.classList.add("correct");
+      } else if (points < 0) {
+        button.classList.add("bad");
+      }
+
+      let ptsText = "";
+      if (points > 0) {
+        ptsText = `Získáváš ${points} bod(ů).`;
+      } else if (points === 0) {
+        ptsText = "Nezískáváš žádné body.";
+      } else {
+        ptsText = `Přicházíš o ${Math.abs(points)} bod(ů).`;
+      }
+
+      feedbackEl.innerHTML = `<strong>Výsledek:</strong> ${comment}<br><br>${ptsText}`;
+      feedbackEl.classList.remove("hidden");
+      currentScoreEl.innerHTML = `Průběžné skóre: <span class="score-pill">${totalScore} bodů</span>`;
+
+      if (points < 0) {
+        // smrt – po krátké pauze rovnou konec hry
+        setTimeout(() => {
+          showEndScreen(true);
+        }, 700);
+      } else {
+        nextButton.classList.remove("hidden");
+      }
+    }
+
+    function evaluateFinalScore(score) {
+      if (score >= 22) {
+        return {
+          title: "Legendární zaklínač / zaklínačka",
+          desc: "Dává ti smysl přemýšlet, připravovat se a volit chytré řešení. Příšery se bojí tvého stínu a krčmy ti rády píšou účet na zeď."
+        };
+      } else if (score >= 15) {
+        return {
+          title: "Zkušený profesionál",
+          desc: "Máš dobrý instinkt a víš, že příprava se vyplácí. Občas to bolí, ale práce je splněná a ty žiješ dál."
+        };
+      } else if (score >= 7) {
+        return {
+          title: "Zaklínačský učedník",
+          desc: "Ještě se máš co učit – často přežiješ, ale někdy víc díky štěstí než dovednosti. Doporučujeme méně alkoholu a více čtení bestiářů."
+        };
+      } else if (score >= 0) {
+        return {
+          title: "Kandidát na vesnickou pamětní desku",
+          desc: "Možná by pro tebe bylo bezpečnější zůstat u vaření lektvarů v bezpečí věže. Ale krčma tě bude milovat – jako zdroj historek „jak to nedělat“."
+        };
+      } else {
+        return {
+          title: "Varování pro ostatní",
+          desc: "Je čas přepsat testament. Tohle není kariéra pro tebe, ale tvůj neúspěch může posloužit jako varování ostatním zaklínařům."
+        };
+      }
+    }
+
+    function showEndScreen(died = false) {
+      gameScreen.classList.add("hidden");
+      endScreen.classList.remove("hidden");
+
+      if (died) {
+        finalScoreEl.textContent = `Celkové skóre: ${totalScore} bod(ů)`;
+        finalTitleEl.textContent = "Padlý zaklínač / zaklínačka";
+        finalDescEl.textContent =
+          "Jedna špatná volba stačila. Příště možná zvolíš opatrnější nebo chytřejší postup – tady by o tobě v krčmě vyprávěli spíš jako o varování než o legendě.";
+        return;
+      }
+
+      const evalResult = evaluateFinalScore(totalScore);
+      finalScoreEl.textContent = `Celkové skóre: ${totalScore} bod(ů)`;
+      finalTitleEl.textContent = evalResult.title;
+      finalDescEl.textContent = evalResult.desc;
+    }
+
+    startButton.addEventListener("click", () => {
+      totalScore = 0;
+      currentIndex = 0;
+      startScreen.classList.add("hidden");
+      endScreen.classList.add("hidden");
+      gameScreen.classList.remove("hidden");
+      showMonster(currentIndex);
+    });
+
+    nextButton.addEventListener("click", () => {
+      currentIndex++;
+      if (currentIndex >= monsters.length) {
+        showEndScreen(false);
+      } else {
+        showMonster(currentIndex);
+      }
+    });
+
+    restartButton.addEventListener("click", () => {
+      totalScore = 0;
+      currentIndex = 0;
+      endScreen.classList.add("hidden");
+      gameScreen.classList.remove("hidden");
+      showMonster(currentIndex);
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
